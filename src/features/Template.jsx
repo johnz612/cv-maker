@@ -10,9 +10,9 @@ function Template() {
   const { workHistory } = useCV();
 
   return (
-    <div className="fixed inset-y-0 right-0 w-full bg-[#8598b2] 	flex items-center justify-center col-start-2 select-none">
+    <div className="fixed inset-y-0 right-0 w-[55%] bg-[#8598b2] 	flex items-center justify-center col-start-2 select-none">
       <div className="  h-[850px]  bg-white w-[650px]">
-        <div className="grid grid-cols-[230px_420px] h-full">
+        <div className="grid grid-cols-[200px_450px] h-full">
           <TemplateLeftContainer />
           <TemplateRightContainer />
         </div>

@@ -11,13 +11,13 @@ import Education from "../components/Education";
 function AppLayout() {
   return (
     <div className="h-screen">
-      <div className="grid w-screen p-3 overflow-scroll">
+      <div className="grid w-screen grid-cols-[45%_65%] p-3 overflow-scroll">
         <div className="flex flex-col w-full">
           <Header />
           <PersonalDetails />
-          <Education />
           <ProfessionalSummary />
           <WorkHistory />
+          <Education />
         </div>
         <Template />
       </div>
