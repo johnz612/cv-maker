@@ -1,6 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
-@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans&display=swap");
+/* ←– your font */
 
+@import "tailwindcss";
+/* ←– everything else (theme + preflight + utilities) */
+
+/* your custom resets and Paged.js styles */
 @layer base {
   *,
   *::before,
@@ -9,10 +13,45 @@
     margin: 0;
     padding: 0;
   }
-}
-
-@layer base {
   html {
     font-family: "Work Sans", ui-sans-serif, system-ui;
+  }
+}
+.print-mode #printable {
+  /* remove any box-shadow you had from Tailwind like shadow-lg */
+  box-shadow: none !important;
+}
+
+.print-mode .no-print {
+  /* hide anything you don’t want in the PDF */
+  display: none !important;
+}
+
+/* add at the very bottom of index.css: */
+@layer utilities {
+  /* 1. hide scrollbar in WebKit, Firefox & IE/Edge */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* 2. show a thin scrollbar (webkit only) */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 3px;
+  }
+  /* Firefox fallback */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.4) transparent;
   }
 }

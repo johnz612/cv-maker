@@ -3,7 +3,7 @@ import styled from "styled-components";
 function Header() {
   return (
     <div>
-      <h1 className="font-bold text-3xl">CV-Maker</h1>
+      <h1 className="text-3xl font-bold">CV-Maker</h1>
     </div>
   );
 }

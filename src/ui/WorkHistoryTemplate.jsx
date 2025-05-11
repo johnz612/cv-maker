@@ -1,26 +1,25 @@
 import styled from "styled-components";
-
-const StyledContainer = styled.div``;
-
-const StyledH2 = styled.h2``;
-
-const StyledP = styled.p``;
+import WorkRoleItem from "./WorkRoleItem";
 
 function WorkHistoryTemplate({ work }) {
-  let newDescription = work?.description?.split("\n");
   return (
-    <StyledContainer>
-      <StyledH2>{work.jobTitle}</StyledH2>
-      <StyledP>{work.employer}</StyledP>
-      <StyledP>{work.location}</StyledP>
-      <StyledP>{work.startMonth}</StyledP>
-      <StyledP>{work.startYear}</StyledP>
-      <StyledP>{work.endMonth}</StyledP>
-      <StyledP>{work.endYear}</StyledP>
-      {newDescription?.map((des) => (
-        <StyledP key={des}>{des}</StyledP>
-      ))}
-    </StyledContainer>
+    <div className="flex px-3 text-xs">
+      <div className="flex flex-col gap-1">
+        <p className="text-sm font-bold">{work.employer}</p>
+        <p className="font-semibold">{work.jobTitle}</p>
+
+        <ul className="flex flex-col gap-1 list-disc ml-7">
+          {work?.roles?.map((role) => (
+            <WorkRoleItem role={role} key={role.id} />
+          ))}
+        </ul>
+      </div>
+      <div className="ml-auto">
+        <p className="text-sm">
+          {work.startYear || null} {work.endYear ? `- ${work.endYear}` : null}
+        </p>
+      </div>
+    </div>
   );
 }
 

@@ -13,6 +13,10 @@ const initialState = {
   phone: "",
   email: "",
   userPhoto: "",
+  profile: "",
+  languages: [],
+  references: [],
+  skills: [],
   workHistory: [],
   education: [],
 };
@@ -38,12 +42,18 @@ function reducer(state, action) {
       return { ...state, email: action.payload };
     case "setUserPhoto":
       return { ...state, userPhoto: action.payload };
+    case "setProfile":
+      return { ...state, profile: action.payload };
     case "setWorkHistory":
-      // console.log(state.workHistory);
       return { ...state, workHistory: action.payload };
+    case "setLanguages":
+      return { ...state, languages: action.payload };
+    case "setSkills":
+      return { ...state, skills: action.payload };
     case "setEducation":
-      // console.log(state.workHistory);
       return { ...state, education: action.payload };
+    case "setReferences":
+      return { ...state, references: action.payload };
 
     default:
       throw new Error("Action unkonwn");
@@ -62,8 +72,12 @@ function CVProvider({ children }) {
       phone,
       email,
       userPhoto,
+      languages,
+      profile,
+      skills,
       workHistory,
       education,
+      references,
     },
     dispatch,
   ] = useReducer(reducer, initialState);
@@ -81,8 +95,12 @@ function CVProvider({ children }) {
         email,
         userPhoto,
         dispatch,
+        languages,
+        profile,
+        skills,
         workHistory,
         education,
+        references,
       }}
     >
       {children}

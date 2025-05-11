@@ -1,14 +1,17 @@
-import Form from "../ui/Form";
-import FormRow from "../ui/FormRow";
-import FormField from "../ui/FormField";
-import Input from "../ui/Input";
-import { useForm } from "react-hook-form";
-import Select from "../ui/Select";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { CiCirclePlus } from "react-icons/ci";
 import styled from "styled-components";
-import HeadingWorkHistory from "../ui/HeadingWorkHistory";
+import { v4 as uuidv4 } from "uuid";
 import { useCV } from "../context/CVContext";
-import StyledTextArea from "../ui/TextAreaInput";
+import Form from "../ui/Form";
+import FormField from "../ui/FormField";
+import FormRow from "../ui/FormRow";
+import Input from "../ui/Input";
+import Select from "../ui/Select";
+import HeadingHistory from "./HeadingHistory";
+import RespWorkItem from "./RespWorkItem";
+import Button from "../ui/Button";
 
 const WorkContainer = styled.div`
   display: flex;
@@ -45,25 +48,64 @@ const year = [
   2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000,
 ];
 
+const yearWPresent = [
+  "Present",
+  2024,
+  2023,
+  2022,
+  2021,
+  2020,
+  2019,
+  2018,
+  2017,
+  2016,
+  2015,
+  2014,
+  2013,
+  2012,
+  2011,
+  2010,
+  2009,
+  2008,
+  2007,
+  2006,
+  2005,
+  2004,
+  2003,
+  2002,
+  2001,
+  2000,
+];
+
 function WorkSingleForm({ job }) {
   const { register } = useForm();
   const { dispatch, workHistory } = useCV();
   const [isOpen, setIsOpen] = useState(true);
   const [jobTitle, setJobTitle] = useState("");
+  const [roles, setRoles] = useState([{ id: "123" }]);
 
+  const isEnough = roles.length >= 3;
+  const isSomeEmpty = roles.some((s) => !s.role);
   function handleChange(value, key) {
-    job[key] = value;
-    dispatch({ type: "setWorkHistory", payload: workHistory });
+    const updatedJob = { ...job, [key]: value };
+    const updatedHistory = workHistory.map((work) => {
+      return work.id === job.id ? updatedJob : work;
+    });
+
+    dispatch({ type: "setWorkHistory", payload: updatedHistory });
   }
 
   return (
     <WorkContainer>
-      <HeadingWorkHistory
+      <HeadingHistory
         isOpen={isOpen}
         handleOpen={setIsOpen}
-        job={job}
-        jobTitle={jobTitle}
+        item={job}
+        title={jobTitle}
+        history={workHistory}
+        kind={"workHistory"}
       />
+
       {isOpen && (
         <FormContainer>
           <Form>
@@ -79,8 +121,6 @@ function WorkSingleForm({ job }) {
                       setJobTitle(() => e.target.value);
                       handleChange(e.target.value, "jobTitle");
                     },
-
-                    //   required: "This field is required!",
                   })}
                 />
               </FormField>
@@ -98,39 +138,8 @@ function WorkSingleForm({ job }) {
                 />
               </FormField>
             </FormRow>
+
             <FormRow>
-              <FormField label="Location">
-                <Input
-                  type="text"
-                  id="location"
-                  mode="long"
-                  {...register("location", {
-                    onChange: (e) => {
-                      handleChange(e.target.value, "location");
-                    },
-                  })}
-                />
-              </FormField>
-            </FormRow>
-            <FormRow>
-              <FormField label="Start Month">
-                <Select
-                  {...register("startMonth", {
-                    onChange: (e) => {
-                      handleChange(e.target.value, "startMonth");
-                    },
-                  })}
-                >
-                  <option value="" hidden>
-                    Month
-                  </option>
-                  {months.map((month) => (
-                    <option value={month} key={month}>
-                      {month}
-                    </option>
-                  ))}
-                </Select>
-              </FormField>
               <FormField label="Start Year">
                 <Select
                   {...register("startYear", {
@@ -149,56 +158,61 @@ function WorkSingleForm({ job }) {
                   ))}
                 </Select>
               </FormField>
-              <FormField label="End Month">
-                <Select
-                  {...register("endMonth", {
-                    onChange: (e) => {
-                      handleChange(e.target.value, "endMonth");
-                    },
-                  })}
-                >
-                  <option value="" hidden>
-                    Month
-                  </option>
-                  {months.map((month, i) => (
-                    <option value={month} key={i}>
-                      {month}
-                    </option>
-                  ))}
-                </Select>
-              </FormField>
+
               <FormField label="End Year">
                 <Select
                   {...register("endYear", {
                     onChange: (e) => {
-                      handleChange(e.target.value, "endMonth");
+                      handleChange(e.target.value, "endYear");
                     },
                   })}
                 >
                   <option value="" hidden>
                     Year
                   </option>
-                  {year.map((year, i) => (
-                    <option value={year} key={i * 10}>
+                  {yearWPresent.map((year, i) => (
+                    <option value={year} key={year}>
                       {year}
                     </option>
                   ))}
                 </Select>
               </FormField>
             </FormRow>
-            <div>
-              <Label htmlFor="description">Description</Label>
-              <StyledTextArea
-                id="description"
-                rows={10}
-                cols={30}
-                {...register("description", {
-                  onChange: (e) => {
-                    handleChange(e.target.value, "description");
-                  },
-                })}
-              />
-            </div>
+            <FormRow>
+              <div className="relative w-full">
+                <FormField label="Roles" className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-3 mt-5">
+                    {roles.map((role) => (
+                      <RespWorkItem
+                        key={role.id}
+                        role={role}
+                        roles={roles}
+                        setRoles={setRoles}
+                        job={job}
+                      />
+                    ))}
+                  </div>
+                  <div className="mt-4 mb-2">
+                    {!isEnough && !isSomeEmpty ? (
+                      <Button
+                        onClick={() => {
+                          const newEntry = { id: uuidv4(), role: "" };
+                          const rolesCopy = Array.from(roles);
+                          rolesCopy.push(newEntry);
+                          setRoles(() => rolesCopy);
+                          // dispatch({ type: "setSkills", payload: skillsCopy });
+                        }}
+                        type="button"
+                        className="self-start"
+                      >
+                        +
+                        {roles.length < 1 ? "Add a role" : " Add one more role"}
+                      </Button>
+                    ) : null}
+                  </div>
+                </FormField>
+              </div>
+            </FormRow>
           </Form>
         </FormContainer>
       )}

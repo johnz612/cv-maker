@@ -1,47 +1,39 @@
-import { v4 as uuidv4 } from "uuid";
-import WorkSingleForm from "./WorkSingleForm";
-import Button from "../ui/Button";
 import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 import { useCV } from "../context/CVContext";
+import Button from "../ui/Button";
 import EducationSingleForm from "./EducationSingleForm";
-
-const StyledWorkHistoryContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 100%;
-  border: 3px solid #e4e1e1;
-`;
-
-const MainContainer = styled.div`
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
 
 function EducationForms() {
   const { education, dispatch } = useCV();
-  // console.log(workHistory);
+  const isEnough = education.length >= 3;
 
   return (
-    <div>
-      <MainContainer>
-        {education.map((job, i) => (
-          <StyledWorkHistoryContainer key={i}>
-            <EducationSingleForm job={job} />
-          </StyledWorkHistoryContainer>
+    <div className="mt-5">
+      <div className="flex flex-col gap-5 p-2">
+        {education.map((ed) => (
+          <div
+            className="flex flex-col w-full gap-4 border-[3px] border-solid border-[#e4e1e1]"
+            key={ed.id}
+          >
+            <EducationSingleForm key={ed.id} ed={ed} />
+          </div>
         ))}
-      </MainContainer>
-      <Button
-        onClick={() => {
-          let id = uuidv4();
-          education.push({ id });
-          dispatch({ type: "setEducation", payload: education });
-        }}
-      >
-        +{education.length < 1 ? "Add education" : " Add one more education"}
-      </Button>
+      </div>
+      {isEnough || (
+        <Button
+          onClick={() => {
+            const newEntry = { id: uuidv4() };
+
+            const edCopy = Array.from(education);
+            edCopy.push(newEntry);
+
+            dispatch({ type: "setEducation", payload: edCopy });
+          }}
+        >
+          +{education.length < 1 ? "Add education" : " Add one more education"}
+        </Button>
+      )}
     </div>
   );
 }

@@ -9,34 +9,29 @@ const StyledWorkHistoryContainer = styled.div`
   flex-direction: column;
   gap: 1rem;
   width: 100%;
-  border: 3px solid #e4e1e1;
-`;
 
-const MainContainer = styled.div`
-  padding: 1rem 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  border: 3px solid #e4e1e1;
 `;
 
 function WorkForms() {
   const { workHistory, dispatch } = useCV();
-  console.log(workHistory);
 
   return (
     <div>
-      <MainContainer>
+      <div className="flex flex-col gap-5 p-2">
         {workHistory.map((job, i) => (
-          <StyledWorkHistoryContainer key={i}>
+          <StyledWorkHistoryContainer key={job.id}>
             <WorkSingleForm job={job} />
           </StyledWorkHistoryContainer>
         ))}
-      </MainContainer>
+      </div>
       <Button
         onClick={() => {
-          let id = uuidv4();
-          workHistory.push({ id, jobTitle: "" });
-          dispatch({ type: "setWorkHistory", payload: workHistory });
+          const newEntry = { id: uuidv4() };
+          const updatedWorkHistory = Array.from(workHistory);
+
+          updatedWorkHistory.push(newEntry);
+          dispatch({ type: "setWorkHistory", payload: updatedWorkHistory });
         }}
       >
         +

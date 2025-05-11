@@ -23,7 +23,6 @@ const variations = {
   primary: css`
     color: rgb(26, 145, 240);
     background-color: inherit;
-    margin-left: 1.5rem;
 
     &:hover {
       background-color: rgba(234, 246, 255, 0.5);

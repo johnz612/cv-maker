@@ -6,13 +6,13 @@ function Home() {
   const navigate = useNavigate();
 
   function handleClick() {
-    navigate("/heading");
+    navigate("/app");
   }
 
   return (
-    <div className="flex justify-center items-center h-screen select-none">
+    <div className="flex items-center justify-center h-screen select-none">
       <div>
-        <h1 className="text-black font-bold">Free CV Maker</h1>
+        <h1 className="font-bold text-black">Free CV Maker</h1>
         <p>Start Building your CV for free now!</p>
         <Button onClick={handleClick}>Start Building</Button>
       </div>

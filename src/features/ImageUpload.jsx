@@ -11,6 +11,7 @@ const UploadContainer = styled.div`
   width: 15rem;
   cursor: pointer;
   justify-self: center;
+
   /* margin-top: -2rem; */
 `;
 
@@ -33,6 +34,12 @@ const StyledSpan = styled.span`
   padding: 0.4rem 0.8rem;
   border-radius: 50px;
   cursor: pointer;
+  /* display: inline-block; */
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 function ImageUpload() {

@@ -1,14 +1,14 @@
-import Form from "../ui/Form";
-import FormRow from "../ui/FormRow";
-import FormField from "../ui/FormField";
-import Input from "../ui/Input";
-import { useForm } from "react-hook-form";
-import Select from "../ui/Select";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import HeadingWorkHistory from "../ui/HeadingWorkHistory";
+import Form from "../ui/Form";
+import FormField from "../ui/FormField";
+import FormRow from "../ui/FormRow";
+import Input from "../ui/Input";
+import Select from "../ui/Select";
+
 import { useCV } from "../context/CVContext";
-import StyledTextArea from "../ui/TextAreaInput";
+import HeadingHistory from "./HeadingHistory";
 
 const Container = styled.div`
   display: flex;
@@ -45,52 +45,101 @@ const year = [
   2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000,
 ];
 
-function EducationSingleForm({ job }) {
+function EducationSingleForm({ ed }) {
   const { register } = useForm();
 
-  const { dispatch, workHistory } = useCV();
+  const { dispatch, education } = useCV();
 
   const [isOpen, setIsOpen] = useState(true);
-  const [jobTitle, setJobTitle] = useState(null);
-  // console.log(workHistory);
+  const [course, setCourse] = useState("");
 
   function handleChange(value, key) {
-    job[key] = value;
-    dispatch({ type: "setWorkHistory", payload: workHistory });
+    const newEducation = { ...ed, [key]: value };
+    const updatedEducation = education.map((currentEd) => {
+      return newEducation.id === currentEd.id ? newEducation : currentEd;
+    });
+
+    dispatch({ type: "setEducation", payload: updatedEducation });
   }
 
   return (
     <Container>
-      <HeadingWorkHistory isOpen={isOpen} handleOpen={setIsOpen} job={job} />
+      <HeadingHistory
+        isOpen={isOpen}
+        handleOpen={setIsOpen}
+        item={ed}
+        title={course}
+        history={education}
+        kind={"education"}
+      />
       {isOpen && (
         <FormContainer>
           <Form>
             <FormRow>
-              <FormField label="Job Title">
+              <FormField label="Start Year">
+                <Select
+                  {...register("startYear", {
+                    onChange: (e) => {
+                      handleChange(e.target.value, "startYear");
+                    },
+                  })}
+                >
+                  <option value="" hidden>
+                    Year
+                  </option>
+                  {year.map((year) => (
+                    <option value={year} key={year}>
+                      {year}
+                    </option>
+                  ))}
+                </Select>
+              </FormField>
+
+              <FormField label="End Year">
+                <Select
+                  {...register("endYear", {
+                    onChange: (e) => {
+                      handleChange(e.target.value, "endYear");
+                    },
+                  })}
+                >
+                  <option value="" hidden>
+                    Year
+                  </option>
+                  {year.map((year, i) => (
+                    <option value={year} key={i * 10}>
+                      {year}
+                    </option>
+                  ))}
+                </Select>
+              </FormField>
+            </FormRow>
+            <FormRow>
+              <FormField label="School Name">
                 <Input
                   type="text"
-                  id="jobTitle"
+                  id="schoolName"
                   mode="long"
                   // defaultValue={}
-                  {...register("jobTitle", {
+                  {...register("schoolName", {
                     onChange: (e) => {
-                      setJobTitle(e.target.value);
-                      handleChange(e.target.value, "jobTitle");
+                      handleChange(e.target.value, "schoolName");
                     },
 
                     //   required: "This field is required!",
                   })}
                 />
               </FormField>
-              <FormField label="Employer">
+              <FormField label="Course">
                 <Input
                   type="text"
-                  id="employer"
+                  id="course"
                   mode="long"
                   // defaultValue={}
-                  {...register("employer", {
+                  {...register("course", {
                     onChange: (e) => {
-                      handleChange(e.target.value, "employer");
+                      setCourse(() => e.target.value);
+                      handleChange(e.target.value, "course");
                     },
                   })}
                 />
@@ -110,93 +159,21 @@ function EducationSingleForm({ job }) {
                 />
               </FormField>
             </FormRow>
+
             <FormRow>
-              <FormField label="Start Month">
-                <Select
-                  {...register("startMonth", {
+              <FormField label="Achievement">
+                <Input
+                  type="text"
+                  id="acheivement"
+                  mode="long"
+                  {...register("achievement", {
                     onChange: (e) => {
-                      handleChange(e.target.value, "startMonth");
+                      handleChange(e.target.value, "achievement");
                     },
                   })}
-                >
-                  <option value="" hidden>
-                    Month
-                  </option>
-                  {months.map((month) => (
-                    <option value={month} key={month}>
-                      {month}
-                    </option>
-                  ))}
-                </Select>
-              </FormField>
-              <FormField label="Start Year">
-                <Select
-                  {...register("startYear", {
-                    onChange: (e) => {
-                      handleChange(e.target.value, "startYear");
-                    },
-                  })}
-                >
-                  <option value="" hidden>
-                    Year
-                  </option>
-                  {year.map((year) => (
-                    <option value={year} key={year}>
-                      {year}
-                    </option>
-                  ))}
-                </Select>
-              </FormField>
-              <FormField label="End Month">
-                <Select
-                  {...register("endMonth", {
-                    onChange: (e) => {
-                      handleChange(e.target.value, "endMonth");
-                    },
-                  })}
-                >
-                  <option value="" hidden>
-                    Month
-                  </option>
-                  {months.map((month, i) => (
-                    <option value={month} key={i}>
-                      {month}
-                    </option>
-                  ))}
-                </Select>
-              </FormField>
-              <FormField label="End Year">
-                <Select
-                  {...register("endYear", {
-                    onChange: (e) => {
-                      handleChange(e.target.value, "endMonth");
-                    },
-                  })}
-                >
-                  <option value="" hidden>
-                    Year
-                  </option>
-                  {year.map((year, i) => (
-                    <option value={year} key={i * 10}>
-                      {year}
-                    </option>
-                  ))}
-                </Select>
+                />
               </FormField>
             </FormRow>
-            <div>
-              <Label htmlFor="description">Description</Label>
-              <StyledTextArea
-                id="description"
-                rows={10}
-                cols={30}
-                {...register("description", {
-                  onChange: (e) => {
-                    handleChange(e.target.value, "description");
-                  },
-                })}
-              />
-            </div>
           </Form>
         </FormContainer>
       )}

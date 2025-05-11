@@ -1,11 +1,16 @@
 import { useCV } from "../context/CVContext";
+import WorkHistoryTemplate from "../ui/WorkHistoryTemplate";
+import RightProfile from "./RightProfile";
+import RightReferences from "./RightReferences";
+import RightSkills from "./RightSkills";
+import RightWorkHistory from "./RightWorkHistory";
 
 function TemplateRightContainer() {
-  const { firstName, surName, profession } = useCV();
+  const { firstName, surName, profession, workHistory } = useCV();
   return (
-    <div className="p-5  text-[#545454]">
+    <div className="px-5 pb-10 text-[#545454] w-full">
       <div className="flex flex-col items-center justify-center">
-        <div>
+        <div className="py-12">
           <p>
             <span className="text-3xl font-bold tracking-tight text-[#545454]">
               {firstName.toUpperCase() || "YourName"}
@@ -18,6 +23,12 @@ function TemplateRightContainer() {
           {/* Small Blue line */}
           {profession ? <div className="w-15 h-1 mt-0.5 bg-[#163853]" /> : null}
         </div>
+      </div>
+      <div className="flex flex-col gap-6">
+        <RightProfile />
+        <RightSkills />
+        <RightWorkHistory />
+        <RightReferences />
       </div>
     </div>
   );

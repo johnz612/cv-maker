@@ -1,6 +1,8 @@
 import styled, { css } from "styled-components";
 
-const Input = styled.input`
+const Input = styled.input.withConfig({
+  shouldForwardProp: (prop) => !["textMode", "mode"].includes(prop),
+})`
   ${(props) =>
     props.mode === "regular" &&
     css`
@@ -10,27 +12,41 @@ const Input = styled.input`
   ${(props) =>
     props.mode === "long" &&
     css`
-      max-width: 100%;
+      width: 100%;
     `}
 
-    ${(props) =>
+  ${(props) =>
     props.mode === "short" &&
     css`
-      max-width: 50%;
+      width: 50%;
     `}
-font-size: 1.2rem;
+
+  ${(props) =>
+    props.textMode === "small" &&
+    css`
+      font-size: 0.8rem;
+    `}
+
+  ${(props) =>
+    props.textMode === "normal" &&
+    css`
+      font-size: 1.2rem;
+    `}
+
   font-family: inherit;
-  padding: 0.6rem 0.8rem;
+  padding: 0.6rem 0.6rem;
   border-radius: 0.3rem;
   border: none;
   background-color: #e4e8ee;
+
   &:invalid {
-    border: 3px solid red;
+    outline: 2px solid red;
   }
 `;
 
 Input.defaultProps = {
   mode: "regular",
+  textMode: "normal",
 };
 
 export default Input;

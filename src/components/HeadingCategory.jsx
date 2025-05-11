@@ -61,44 +61,22 @@ const DeleteText = styled.div`
     bottom: -30%;
   }
 `;
-
-function HeadingWorkHistory({ handleOpen, job, isOpen, jobTitle }) {
-  const [isHover, setIsHover] = useState(false);
-  const [iconIsHover, setIconIsHover] = useState(false);
-  const { workHistory, dispatch } = useCV();
+function HeadingCategory({ isOpen, handleOpen, title }) {
+  const { dispatch } = useCV();
 
   function handleDelete() {
-    let newWorkHistory = workHistory.filter((work) => work.id !== job.id);
+    let newHistory = history.filter((val) => val.id !== item.id);
 
-    dispatch({ type: "setWorkHistory", payload: newWorkHistory });
+    dispatch({ type: type[kind], payload: newHistory });
   }
   return (
-    <StyledOuterContainer
-      onClick={() => handleOpen((s) => !s)}
-      onMouseEnter={() => setIsHover(true)}
-      onMouseLeave={() => setIsHover(false)}
-    >
+    <StyledOuterContainer onClick={() => handleOpen((s) => !s)}>
       <StyledContainer>
-        {jobTitle || <p>Not Specified</p>}
+        <span>{title}</span>
         {isOpen ? <IoChevronDownOutline /> : <IoChevronUpOutline />}
-        <DeleteIconContainer
-          $isHovered={isHover}
-          onMouseEnter={() => {
-            setIsHover(true);
-            setIconIsHover(true);
-          }}
-          onMouseLeave={() => {
-            setIsHover(false);
-            setIconIsHover(false);
-          }}
-          onClick={handleDelete}
-        >
-          <DeleteText $isIconHovered={iconIsHover}>Delete</DeleteText>
-          <MdOutlineDelete size={"20px"} />
-        </DeleteIconContainer>
       </StyledContainer>
     </StyledOuterContainer>
   );
 }
 
-export default HeadingWorkHistory;
+export default HeadingCategory;

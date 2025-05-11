@@ -7,6 +7,13 @@ export default {
         work: ['"Work Sans"', "sans-serif"],
       },
     },
+    variants: {
+      extend: {},
+    },
+    plugins: [
+      require("tailwind-scrollbar"),
+      // if you want “auto-hiding” out-of-the-box, add the “hide” variant:
+      require("tailwind-scrollbar-hide"),
+    ],
   },
-  plugins: [],
 };
